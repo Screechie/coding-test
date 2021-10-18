@@ -12,6 +12,7 @@ function App() {
   const [btnState, setBtnstate] = useState([false, false]);
   const [dataState, setDatastate] = useState([]);
   const [curImgIndex, setCurImgIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     getData();
@@ -22,32 +23,46 @@ function App() {
         setDatastate([]);
         return;
       }
-  
+      setIsLoading(true);
+
       if(sharks && cats){
-        const {catsList, sharksList} = await getAllImages();
-        //check to make sure arrays exist
-        let data = [...catsList,...sharksList];
-        setDatastate(data);
+        const data = await getAllImages();
+        const catsList = data.data.catsList;
+        const sharksList = data.data.sharksList;
+        //Add check to make sure arrays exist
+        const allData = [...catsList,...sharksList];
+        setDatastate(allData);
+        setTimeout(() => setIsLoading(false), 500);
         return;
       }
       
       if(sharks){
-        const data = await getSharkImages();
-        setDatastate(data);
+        const sharkData = await getSharkImages();
+        setDatastate(sharkData.data);
+        setTimeout(() => setIsLoading(false), 500);
         return;
       }
   
       if(cats) {
-        const data = await getCatImages();
-        setDatastate(data);
+        const catData = await getCatImages();
+        setDatastate(catData.data);
+        setTimeout(() => setIsLoading(false), 500);
         return;
       }
     }
-
-    // return () => {
-    //   cleanu
-    // }
   }, [btnState]);
+
+  const Loading = () => (
+    <div className="loading-container">
+      <h1 className="loading">Loading images...</h1>
+    </div>
+  );
+
+  const InitMessage = () => (
+    <div className="init-message-container">
+      <h1 className="init-message">No images to Show. Please select a category from above to begin.</h1>
+    </div>
+  );
 
   const handleButtonClick = (title) => {
     switch (title) {
@@ -76,7 +91,6 @@ function App() {
     setCurImgIndex(curImgIndex + 1);
   };
 
-  console.log(dataState);
   return(
     <div className="container">
       <div className="btn-container">
@@ -84,9 +98,15 @@ function App() {
         <Button isSelected = { btnState[1]} buttonHandler={handleButtonClick} title="Cats" />
       </div>
       <div className="stage-container">
-        { curImgIndex > 0 && <LeftArrow clickHandler={decrementImageIndex}/> }
-        <Stage img={dataState[curImgIndex]}/>
-        { curImgIndex < dataState.length -1 && <RightArrow clickHandler={incrementImageIndex}/> }
+        { 
+          isLoading ? 
+          <Loading/> : 
+          <>
+            { curImgIndex > 0 && <LeftArrow clickHandler={decrementImageIndex}/> }
+            {dataState.length === 0 ? <InitMessage/> : <Stage img={dataState[curImgIndex]}/>}
+            { curImgIndex < dataState.length -1 && <RightArrow clickHandler={incrementImageIndex}/> }
+          </>
+        } 
       </div>
     </div>
     );

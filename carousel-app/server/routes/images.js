@@ -10,7 +10,6 @@ router.use(express.json());
 
 async function readData(file){
   try {
-    console.log("reading file...");
     const fileData = await fsp.readFile(file, "utf-8");
     return fileData;
   }
@@ -20,7 +19,6 @@ async function readData(file){
 }
 
 const imageData = await readData(file);
-console.log(imageData);
 const data = JSON.parse(imageData);
 
 router.get('/all', (req, res) => {
