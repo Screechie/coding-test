@@ -1,10 +1,9 @@
 import React from "react";
 import "./Arrow.css";
 
-
 const RightArrow = (props) => (
 <div className="arrow-container">
-  <i className="right"></i>
+  <i className="right" onClick={props.clickHandler}></i>
 </div>
 );
 

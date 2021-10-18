@@ -8,10 +8,8 @@ const file = `${__dirname}/public/data/data.json`;
 router.use(express.static("public"));
 router.use(express.json());
 
-
 async function readData(file){
   try {
-    console.log("reading file...");
     const fileData = await fsp.readFile(file, "utf-8");
     return fileData;
   }

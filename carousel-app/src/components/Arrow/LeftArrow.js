@@ -4,7 +4,7 @@ import "./Arrow.css";
 
 const LeftArrow = (props) => (
 <div className="arrow-container">
-  <i className="left"></i>
+  <i className="left" onClick={props.clickHandler}></i>
 </div>
 );
 
