@@ -14,6 +14,10 @@ function App() {
   const [curImgIndex, setCurImgIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
+  const randomizeArray = (arr) => {
+    return arr.sort((a,b) =>  0.5 - Math.random());
+  }
+
   useEffect(() => {
     getData();
     async function getData() {
@@ -31,6 +35,7 @@ function App() {
         const sharksList = data.data.sharksList;
         //Add check to make sure arrays exist
         const allData = [...catsList,...sharksList];
+        randomizeArray(allData);
         setDatastate(allData);
         setTimeout(() => setIsLoading(false), 500);
         return;
